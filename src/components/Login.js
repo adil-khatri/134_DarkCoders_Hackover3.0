@@ -17,15 +17,12 @@ const Login = () => {
   const [wallet, setWallet] = useState({});
 
   useEffect(() => {
-    /**
-     * If the user has metamask installed, then request the user's account address and pass it to the
-     * accountChangeHandler function
-     */
     const ConnectWallet = () => {
       if (window.ethereum) {
         window.ethereum
           .request({method: 'eth_requestAccounts'})
           .then((res) => accountChangeHandler(res[0]));
+        console.log(wallet);
       } else {
         toast.error('install metamask extension!!', {
           toastId: 127 + 7,
@@ -70,7 +67,7 @@ const Login = () => {
   return (
     <>
       <section className="login">
-        <div>
+        <div className="form">
           <center>
             <h1>Login Into {process.env.REACT_APP_NAME}</h1>
           </center>

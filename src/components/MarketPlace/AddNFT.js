@@ -1,16 +1,14 @@
 import {PhotoCamera} from '@mui/icons-material';
 import {Button, TextField} from '@mui/material';
 import React, {useState} from 'react';
-import './create-post.scss';
+import "../posts/create-post.scss"
 import $ from 'jquery';
 import axios from 'axios';
 import {toast, ToastContainer} from 'react-toastify';
 import {useNavigate} from 'react-router-dom';
-import {SyncLoader} from 'react-spinners';
-import {css} from '@emotion/react';
 
-const CreatePostForm = (props) => {
-  const navigate = useNavigate();
+const AddNFT = (props) => {
+    const navigate = useNavigate();
   const [file, setFile] = useState();
   let axiosConfig = {
     headers: {
@@ -19,20 +17,11 @@ const CreatePostForm = (props) => {
     },
   };
   const [post, setPost] = useState({
-    caption: '',
-    tag: '',
+    ethereum:'',
     image: '',
     username: '',
     wallet: '',
   });
-
-  const override = css`
-    display: block;
-    margin: 0 auto;
-    border-color: red;
-  `;
-
-  let [loading, setLoading] = useState(false);
 
   //Adding image to Cloudinary and Post State
   const handleChange = async (e) => {
@@ -40,7 +29,7 @@ const CreatePostForm = (props) => {
     data.append('file', e.target.files[0]);
     data.append('upload_preset', 'social_posts');
     $('#image-text').hide();
-    setLoading(true);
+
     const dataFile = await fetch(
       'https://api.cloudinary.com/v1_1/ronaklala-games/image/upload',
       {
@@ -50,7 +39,6 @@ const CreatePostForm = (props) => {
     ).then((r) => r.json());
 
     post.image = dataFile.secure_url;
-    setLoading(false);
     setFile(dataFile.secure_url);
   };
 
@@ -79,16 +67,16 @@ const CreatePostForm = (props) => {
       post.username = props.username;
       post.wallet = props.wallet;
       axios
-        .post('http://localhost:5001/create-post', post,axiosConfig)
+        .post('http://localhost:5001/MarketPlace', post,axiosConfig)
         .then((res) => {
           console.log(res.status);
           if (res.status === 201) {
-            toast.success('Post Created Successfully', {
+            toast.success('NFT Added Successfully', {
               toastId: 1234 + 111,
             });
-            setTimeout(() => {
-              navigate('/posts/' + post.wallet);
-            }, 2000);
+            // setTimeout(() => {
+            //   navigate('/posts/' + post.wallet);
+            // }, 2000);
           }
         })
         .catch((err) => {
@@ -100,31 +88,24 @@ const CreatePostForm = (props) => {
         });
     }
   };
-
   return (
     <>
-      <section className="home">
+    <section className="home">
         <div className="post">
           <form>
             <center>
-              <h2>Create a Post to {process.env.REACT_APP_NAME}</h2>
+              <h2>Add NFT {process.env.REACT_APP_NAME}</h2>
             </center>
 
-            <TextField
-              id="outlined-basic"
-              label="Tag-Line"
-              variant="outlined"
-              onChange={handleInput}
-              defaultValue={post.tag}
-              name="tag"
-            />
+            
             <TextField
               variant="outlined"
-              label="Caption"
+              inputMode='numeric'
+              label="Enter Ethereum"
               fullWidth
               onChange={handleInput}
-              defaultValue={post.caption}
-              name="caption"
+              defaultValue={post.ethereum}
+              name="ethereum"
             />
             <label htmlFor="btn-upload">
               Upload Image:&nbsp;&nbsp;&nbsp;
@@ -147,24 +128,15 @@ const CreatePostForm = (props) => {
             <div className="image">
               <span id="image-text">{'/* Image Goes Here */'}</span>
               <img src={file} />
-              {loading === true ? (
-                <SyncLoader
-                  loading={loading}
-                  css={override}
-                  size={20}
-                  color={'#2F2934'}
-                />
-              ) : (
-                <></>
-              )}
             </div>
             <input type="submit" onClick={handleSubmit} />
           </form>
         </div>
       </section>
       <ToastContainer />
-    </>
-  );
-};
 
-export default CreatePostForm;
+    </>
+  )
+}
+
+export default AddNFT

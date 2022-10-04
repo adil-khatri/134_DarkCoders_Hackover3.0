@@ -1,6 +1,9 @@
 const express = require('express');
 const Post = require('../schemas/postSchema');
+const AddNFT = require('../schemas/AddNft');
+
 const User = require('../schemas/userSchema');
+const storage = require('node-sessionstorage');
 const router = express.Router();
 
 //Creating a Post
@@ -11,6 +14,20 @@ router.post('/create-post', (req, res) => {
     .save()
     .then(() => {
       res.status(201).json({message: 'Post Created Successfully'});
+    })
+    .catch(() => {
+      res.status(500).json({message: 'Internal Server Error'});
+    });
+});
+
+
+router.post('/MarketPlace', (req, res) => {
+  const {image,ethereum, wallet, username} = req.body;
+  const post = new AddNFT({image, wallet, username, ethereum});
+  post
+    .save()
+    .then(() => {
+      res.status(201).json({message: 'NFT Added Successfully'});
     })
     .catch(() => {
       res.status(500).json({message: 'Internal Server Error'});
@@ -28,7 +45,19 @@ router.get('/posts/:uid', async (req, res) => {
   });
 });
 
-//get user Date
+//Showings Users of App
+router.get('/users', (req, res) => {
+  const usersData = User.find()
+    .then((doc) => {
+      if (!doc) {
+      } else {
+        res.json(doc);
+      }
+    })
+    .catch((err) => {
+      res.status(500).json({error: 'No Data Found'});
+    });
+});
 
 //home page post 
 router.get('/posts', async (req, res) => res.json(await Post.find({}).sort({ createdAt: -1 }).exec()));
@@ -78,6 +107,22 @@ router.post('/user_pic', async (req, res) => {
     })
     .catch((err) => {
       res.status(500).json({message: 'Error'});
+    });
+});
+
+//Get Single Post
+router.get('/p-self/:postid', (req, res) => {
+  const post = req.params.postid;
+  const postdata = Post.findById(post)
+    .then((doc) => {
+      if (!doc) {
+        res.status(404).json({message: 'Post Not Found'});
+      } else {
+        res.status(201).json(doc);
+      }
+    })
+    .catch((err) => {
+      res.status(404).json({message: 'Post Not Found'});
     });
 });
 

@@ -19,9 +19,10 @@ const Posts = () => {
   const wallet = useParams();
 
   const getPosts = async () => {
-    await axios.get('/posts/' + wallet.uid).then((res) => {
+    await axios.get('http://localhost:5001/posts' + wallet.uid).then((res) => {
       setPosts(res.data.doc);
       setLoading(false);
+      console.log(posts);
     });
   };
 
@@ -61,8 +62,8 @@ const Posts = () => {
               ) : (
                 <>
                   <ul>
-                    {posts.map((post) => (
-                      <a href={'/p/' + post._id}>
+                    {posts.map((post, id) => (
+                      <a href={'/p-self/' + post._id}>
                         <li key={post._id} id={post._id}>
                           <div className="post">
                             <img src={post.image} alt={post.image} />
