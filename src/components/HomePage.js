@@ -1,20 +1,24 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
+/* eslint-disable jsx-a11y/img-redundant-alt */
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable eqeqeq */
+/* eslint-disable no-unused-vars */
 import axios from 'axios';
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import './sass/sidebar.scss';
-import {SyncLoader} from 'react-spinners';
-import {css} from '@emotion/react';
-import {Avatar} from '@mui/material';
-import {Icon} from '@iconify/react';
-import {useMoralis} from 'react-moralis';
-import {toast} from 'react-toastify';
+import { SyncLoader } from 'react-spinners';
+import { css } from '@emotion/react';
+import { Avatar } from '@mui/material';
+import { Icon } from '@iconify/react';
+import { useMoralis } from 'react-moralis';
+import { toast } from 'react-toastify';
 import moment from 'moment';
 import $ from 'jquery';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 
 const HomePage = (props) => {
-  const {Moralis, isAuthenticated, authenticate} = useMoralis();
-
+  const { Moralis, isAuthenticated, authenticate } = useMoralis();
   //Function for if a post has link in it, it will make it redirectable
   function urlify(text) {
     var urlRegex = /(https?:\/\/[^\s]+)/g;
@@ -59,6 +63,7 @@ const HomePage = (props) => {
   const [time, setTime] = useState({});
   let [loading, setLoading] = useState(true);
   const [posts, setPosts] = useState([]);
+  const [getsavepost, getsavePosts] = useState([]);
 
   const today = new Date();
 
@@ -70,8 +75,36 @@ const HomePage = (props) => {
     });
   };
 
+  const getSavePosts = async () => {
+    await axios.get('http://localhost:5001/savepost').then((res) => {
+      getsavePosts(res.data.doc);
+    });
+  };
+
+  //to save post
+  const save = async (e, postid, username, userid, image) => {
+    e.preventDefault();
+    // setsavePosts({id,username,user_id});
+    console.log(postid, username, userid);
+    let text = 'Do you want to save this post?';
+
+    if (window.confirm(text) == true) {
+      await axios
+        .post(
+          'http://localhost:5001/save',
+          { postid, username, userid, image },
+          axiosConfig
+        )
+        .then((res) => {
+          console.log(res);
+          window.location.reload();
+        });
+    }
+  };
+
   useEffect(() => {
     getPosts();
+    getSavePosts();
     const web3 = Moralis.enableWeb3();
     setTime(today.getHours());
     if (sessionStorage.getItem('user') !== null) {
@@ -181,7 +214,7 @@ const HomePage = (props) => {
         $('#like' + id).hide();
         $('#unlike' + id).show();
       })
-      .catch((err) => {});
+      .catch((err) => { });
   };
 
   //function for UNLIKING a post
@@ -204,11 +237,12 @@ const HomePage = (props) => {
         $('#like' + id).show();
         $('#unlike' + id).hide();
       })
-      .catch((err) => {});
+      .catch((err) => { });
   };
 
   return (
     <>
+      {/* {console.log(getsavepost[0].postid)} */}
       <div>
         <section className="home">
           <div className="greetings">
@@ -277,7 +311,7 @@ const HomePage = (props) => {
                                   <Avatar
                                     alt="Profile Image"
                                     src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
-                                    sx={{width: 26, height: 26}}
+                                    sx={{ width: 26, height: 26 }}
                                     key={user._id}
                                   />
                                 </>
@@ -286,14 +320,14 @@ const HomePage = (props) => {
                                   <Avatar
                                     alt="Profile Image"
                                     src={user.profile_url}
-                                    sx={{width: 26, height: 26}}
+                                    sx={{ width: 26, height: 26 }}
                                     key={user._id}
                                   />
                                 </>
                               )
                             )}
 
-                            <a style={{color: '#fff'}} href={'/' + post.wallet}>
+                            <a style={{ color: '#fff' }} href={'/' + post.wallet}>
                               <b>
                                 {post.username}
                                 <greyscale>
@@ -341,7 +375,7 @@ const HomePage = (props) => {
                                   <Avatar
                                     alt="Profile Image"
                                     src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
-                                    sx={{width: 26, height: 26}}
+                                    sx={{ width: 26, height: 26 }}
                                     key={user._id}
                                   />
                                 </>
@@ -350,14 +384,14 @@ const HomePage = (props) => {
                                   <Avatar
                                     alt="Profile Image"
                                     src={user.profile_url}
-                                    sx={{width: 26, height: 26}}
+                                    sx={{ width: 26, height: 26 }}
                                     key={user._id}
                                   />
                                 </>
                               )
                             )}
 
-                            <a style={{color: '#fff'}} href={`/${post.wallet}`}>
+                            <a style={{ color: '#fff' }} href={`/${post.wallet}`}>
                               <b>
                                 {post.username}
                                 <greyscale>
@@ -395,7 +429,7 @@ const HomePage = (props) => {
                             <button
                               id={'unlike' + post._id}
                               type="submit"
-                              style={{display: 'none'}}
+                              style={{ display: 'none' }}
                               onClick={() => {
                                 unlikePost(post._id);
                               }}>
@@ -438,7 +472,42 @@ const HomePage = (props) => {
                               </>
                             )}
                             <span>{post.comment.length} Comments</span>
-                            <span>Save</span>
+                            {getsavepost.filter(
+                              (e) =>
+                                e.username == user.username &&
+                                e.postid == post._id
+                            ).length > 0 ? (
+                              // {getsavepost[ind].postid!=(post._id)  && getsavepost[ind].username!=(post.username)
+                              <button
+                                style={{
+                                  background: 'none',
+                                  outline: 'none',
+                                  color: '#fefe',
+                                  border: 'none',
+                                }}
+                                disabled>
+                                Saved
+                              </button>
+                            ) : (
+                              <button
+                                style={{
+                                  background: 'none',
+                                  outline: 'none',
+                                  color: '#fff',
+                                  border: 'none',
+                                }}
+                                onClick={(event) =>
+                                  save(
+                                    event,
+                                    post._id,
+                                    user.username,
+                                    user._id,
+                                    post.image
+                                  )
+                                }>
+                                <span>Save</span>
+                              </button>
+                            )}
                           </div>
                         </div>
                       </>

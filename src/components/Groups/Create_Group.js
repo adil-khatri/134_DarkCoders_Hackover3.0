@@ -1,12 +1,14 @@
-import {PhotoCamera} from '@mui/icons-material';
-import {Button, css, TextField} from '@mui/material';
-import React, {useEffect, useState} from 'react';
-import {SyncLoader} from 'react-spinners';
+/* eslint-disable jsx-a11y/alt-text */
+import { PhotoCamera } from '@mui/icons-material';
+import { Button, css, TextField } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { SyncLoader } from 'react-spinners';
 import Header from '../Header';
 import Sidebar from '../Sidebar';
 import $ from 'jquery';
 import axios from 'axios';
-import {toast} from 'react-toastify';
+import { toast } from 'react-toastify';
+import MobileMenu from '../MobileMenu';
 
 const Create_Group = () => {
   const [file, setFile] = useState();
@@ -43,12 +45,28 @@ const Create_Group = () => {
     group.wallet = user.wallet;
     group.uid = user._id;
     if (group.name === '' || group.description === '') {
-      toast.error('Please Fill the Whole Form');
+      toast.error('Please Fill the Whole Form', {
+        position: 'top-center',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     } else {
       axios
         .post('http://localhost:5001/create_group', group)
         .then((res) => {
-          toast.success('Group Created Successfully');
+          toast.success('Group Created Successfully', {
+            position: 'top-center',
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
           window.location.href = '/groups';
         })
         .catch({});
@@ -76,7 +94,7 @@ const Create_Group = () => {
 
   //Handling the Input Data
   const handleChange = (e) => {
-    const {name, value} = e.target;
+    const { name, value } = e.target;
     setGroup((event) => {
       return {
         ...event,
@@ -95,6 +113,7 @@ const Create_Group = () => {
             wallet={user.wallet}
             profile_url={user.profile_url}
           />
+          <MobileMenu />
           <section className="home">
             <div className="post">
               <form>
@@ -123,7 +142,7 @@ const Create_Group = () => {
                   <input
                     id="btn-upload"
                     name="btn-upload"
-                    style={{display: 'none'}}
+                    style={{ display: 'none' }}
                     type="file"
                     accept="image/*"
                     onChange={handleFile}

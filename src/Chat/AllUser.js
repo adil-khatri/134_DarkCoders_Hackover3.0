@@ -1,10 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useState, useEffect} from 'react';
-import userIm from './../assets/user.png';
-import {onSnapshot, doc} from 'firebase/firestore';
-import {db} from './../firebase';
+import React, { useState, useEffect } from 'react';
+import { onSnapshot, doc } from 'firebase/firestore';
+import { db } from './../firebase';
 
-const AllUser = ({user1, user, selectUser, chat}) => {
+const AllUser = ({ user1, user, selectUser, chat }) => {
   const user2 = user.id;
   const [data, setData] = useState('');
 
@@ -19,9 +18,8 @@ const AllUser = ({user1, user, selectUser, chat}) => {
   return (
     <>
       <div
-        className={`user_wrapper txtf ${
-          chat.name === user.name && 'selected_user'
-        }`}
+        className={`user_wrapper txtf ${chat.name === user.name && 'selected_user'
+          }`}
         onClick={() => selectUser(user)}>
         <div className="user_info">
           <div className="user_detail">
@@ -45,10 +43,17 @@ const AllUser = ({user1, user, selectUser, chat}) => {
       </div>
       <div
         onClick={() => selectUser(user)}
-        className={`sm_container ${
-          chat.name === user.name && 'selected_user'
-        }`}>
-        <img src={userIm} alt="avatar" className="avatar sm_screen" />
+        className={`sm_container ${chat.name === user.name && 'selected_user'
+          }`}>
+        <img
+          src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+          alt="avatar"
+          className="avatar sm_screen"
+        />
+
+        <span className="m-show" style={{ display: 'none' }}>
+          {user.name}
+        </span>
       </div>
     </>
   );

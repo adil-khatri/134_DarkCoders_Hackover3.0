@@ -1,19 +1,21 @@
-import {PhotoCamera} from '@mui/icons-material';
-import {Button, TextField} from '@mui/material';
-import React, {useState, useEffect} from 'react';
+/* eslint-disable no-unused-vars */
+/* eslint-disable jsx-a11y/alt-text */
+import { PhotoCamera } from '@mui/icons-material';
+import { Button, TextField } from '@mui/material';
+import React, { useState, useEffect } from 'react';
 import '../posts/create-post.scss';
 import $ from 'jquery';
 import axios from 'axios';
-import {toast, ToastContainer} from 'react-toastify';
-import {useNavigate} from 'react-router-dom';
-import {SyncLoader} from 'react-spinners';
-import {css} from '@emotion/react';
-import {useMoralis} from 'react-moralis';
+import { toast, ToastContainer } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import { SyncLoader } from 'react-spinners';
+import { css } from '@emotion/react';
+import { useMoralis } from 'react-moralis';
 
 const AddNFT = (props) => {
   const navigate = useNavigate();
   const [file, setFile] = useState();
-  const {Moralis, isAuthenticated} = useMoralis();
+  const { Moralis, isAuthenticated } = useMoralis();
   const [button, setButton] = useState(false);
 
   const override = css`
@@ -32,6 +34,7 @@ const AddNFT = (props) => {
 
   useEffect(() => {
     const web3 = Moralis.enableWeb3();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const [post, setPost] = useState({
     description: '',
@@ -80,6 +83,13 @@ const AddNFT = (props) => {
 
     toast.success('NFT Minting Started', {
       toastId: 12345 + 65,
+      position: 'top-center',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
     });
 
     $('#image-text').hide();
@@ -101,7 +111,7 @@ const AddNFT = (props) => {
 
   //Handling the Input Data
   const handleInput = (e) => {
-    const {name, value} = e.target;
+    const { name, value } = e.target;
     setPost((event) => {
       return {
         ...event,
@@ -196,7 +206,7 @@ const AddNFT = (props) => {
               <input
                 id="btn-upload"
                 name="btn-upload"
-                style={{display: 'none'}}
+                style={{ display: 'none' }}
                 type="file"
                 accept="image/*"
                 onChange={handleChange}

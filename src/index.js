@@ -1,9 +1,10 @@
+/* eslint-disable react/jsx-pascal-case */
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import {BrowserRouter, Route, Routes} from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Login from './components/Login';
 import Register from './components/Register';
 import Page404 from './components/Page404';
@@ -12,7 +13,7 @@ import ViewPosts from './components/posts/ViewPosts';
 import Profile from './components/Profile/Profile';
 import SinglePost from './components/posts/SinglePost';
 import Users from './components/Users/Users';
-import {MoralisProvider} from 'react-moralis';
+import { MoralisProvider } from 'react-moralis';
 import Comment from './components/Comment';
 import AddNftpage from './components/MarketPlace/AddNftpage';
 import MarketPlace from './components/MarketPlace/MarketPlace';
@@ -25,6 +26,8 @@ import Create_Group from './components/Groups/Create_Group';
 import SingleGroup from './components/Groups/SingleGroup';
 import SingleGroupMemberList from './components/Groups/SingleGroupMemberList';
 import GroupPosts from './components/Groups/GroupPosts';
+import Saved_post from './components/Saved/Saved_post';
+import Followers from './components/Users/Followers';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -42,6 +45,7 @@ root.render(
           <Route path="/MarketPlace" element={<MarketPlace />} />
           <Route path="/create-Nft" element={<AddNftpage />} />
           <Route path="/search/:search" element={<UserSearch />} />
+          <Route path="/saved-post/:username" element={<Saved_post />} />
 
           <Route path="/posts/:uid" element={<ViewPosts />} />
           <Route path="/:uid" element={<Profile />} />
@@ -55,6 +59,7 @@ root.render(
           <Route path="/groups" element={<Groups />} />
           <Route path="/create-group" element={<Create_Group />} />
           <Route path="/group/:gid" element={<SingleGroup />} />
+          <Route path="/followers/:uid" element={<Followers />} />
           <Route
             path="/group/:gid/members"
             element={<SingleGroupMemberList />}

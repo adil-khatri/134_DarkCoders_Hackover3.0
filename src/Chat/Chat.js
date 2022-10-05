@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useEffect, useState} from 'react';
-import {db} from '../firebase';
+import React, { useEffect, useState } from 'react';
+import { db } from '../firebase';
 import AllUser from './AllUser';
 import MessageForm from './MessageForm';
 import {
@@ -18,6 +18,8 @@ import {
 import Message from './Message';
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
+import MobileMenu from '../components/MobileMenu';
+import './chat.scss';
 
 const Chat = () => {
   const [users, setUsers] = useState([]);
@@ -67,7 +69,7 @@ const Chat = () => {
 
     const docSnap = await getDoc(doc(db, 'lastMsg', id));
     if (docSnap.data() && docSnap.data().from !== user) {
-      await updateDoc(doc(db, 'lastMsg', id), {unread: false});
+      await updateDoc(doc(db, 'lastMsg', id), { unread: false });
     }
   };
 
@@ -109,6 +111,7 @@ const Chat = () => {
             wallet={user.wallet}
             profile_url={user.profile_url}
           />
+          <MobileMenu />
           <div className="home_container">
             <div className="users_container">
               {users.map((user) => (
@@ -130,8 +133,8 @@ const Chat = () => {
                   <div className="messages">
                     {msgs.length
                       ? msgs.map((msg, i) => (
-                          <Message key={i} msg={msg} user1={user1} />
-                        ))
+                        <Message key={i} msg={msg} user1={user1} />
+                      ))
                       : null}
                   </div>
                   <MessageForm

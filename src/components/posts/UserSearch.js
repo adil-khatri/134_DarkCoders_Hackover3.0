@@ -1,10 +1,15 @@
-import {css} from '@emotion/react';
-import {useParams} from 'react-router-dom';
+/* eslint-disable array-callback-return */
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable eqeqeq */
+/* eslint-disable no-unused-vars */
+import { css } from '@emotion/react';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import React, {useEffect, useState} from 'react';
-import {SyncLoader} from 'react-spinners';
+import React, { useEffect, useState } from 'react';
+import { SyncLoader } from 'react-spinners';
 import Header from '../Header';
 import Sidebar from '../Sidebar';
+import MobileMenu from '../MobileMenu';
 const UserSearch = () => {
   var count;
   const search = useParams();
@@ -73,6 +78,7 @@ const UserSearch = () => {
             wallet={user1.wallet}
             profile_url={user1.profile_url}
           />
+          <MobileMenu />
           {loading == true ? (
             <>
               <center>
@@ -90,7 +96,7 @@ const UserSearch = () => {
             <>
               {Object.keys(serach1).length == 0 ? (
                 <>
-                  <h1 style={{color: '#fff'}}>No User Found</h1>
+                  <h1 style={{ color: '#fff' }}>No User Found</h1>
                 </>
               ) : (
                 <>

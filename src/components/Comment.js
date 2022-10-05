@@ -1,8 +1,9 @@
+/* eslint-disable eqeqeq */
 /* eslint-disable no-unused-vars */
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import {toast} from 'react-toastify';
-import {useParams} from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { useParams } from 'react-router-dom';
 import './sass/comments.scss';
 import $ from 'jquery';
 
@@ -46,6 +47,13 @@ const Comment = (props) => {
           if (res.status == 200) {
             toast.success('Comment Added Successfully', {
               toastId: 1234 + 111,
+              position: 'top-center',
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
             });
             $('.comment').val('');
             window.location.reload();
@@ -56,6 +64,13 @@ const Comment = (props) => {
             console.log(err.message);
             toast.error('Internal Server Error', {
               toastId: 111 + 123,
+              position: 'top-center',
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
             });
           }
         });
@@ -76,7 +91,7 @@ const Comment = (props) => {
           <button
             type="submit"
             className="btn combtn rounded"
-            style={{fontWeight: 'bold'}}>
+            style={{ fontWeight: 'bold' }}>
             Post Comment
           </button>
         </form>

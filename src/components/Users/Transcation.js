@@ -1,11 +1,15 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-unused-vars */
+/* eslint-disable eqeqeq */
 import axios from 'axios';
-import React, {useEffect, useState} from 'react';
-import {useParams} from 'react-router-dom';
-import {useMoralisWeb3Api} from 'react-moralis';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { useMoralisWeb3Api } from 'react-moralis';
 import Header from '../Header';
 import Sidebar from '../Sidebar';
 import './users.scss';
 import moment from 'moment';
+import MobileMenu from '../MobileMenu';
 
 const Transcation = () => {
   let [loading, setLoading] = useState(true);
@@ -47,11 +51,12 @@ const Transcation = () => {
             wallet={user.wallet}
             profile_url={user.profile_url}
           />
+          <MobileMenu />
           <section className="products">
             {trans.length == 0 ? (
               <>
                 <div>
-                  <h1 style={{fontSize: '32px'}}>
+                  <h1 style={{ fontSize: '32px' }}>
                     No Transcation Found For this user
                   </h1>
                 </div>
