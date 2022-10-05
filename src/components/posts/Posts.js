@@ -19,7 +19,7 @@ const Posts = () => {
   const wallet = useParams();
   useEffect(() => {
     getPosts();
-  },[]);
+  }, []);
   const getPosts = async () => {
     await axios.get('http://localhost:5001/posts/' + wallet.uid).then((res) => {
       setLoading(false);
@@ -28,11 +28,9 @@ const Posts = () => {
     });
   };
 
-  
-
   return (
     <>
-      {loading == true ? (
+      {loading === true ? (
         <>
           <div className="spinner">
             <center>
@@ -59,12 +57,11 @@ const Posts = () => {
                     <button>Create One Now</button>
                   </a>
                 </>
-              ) :
-               (
+              ) : (
                 <>
                   <ul>
                     {posts.map((post, id) => (
-                      <a href={'/p-self/' + post._id}>
+                      <a href={'/post/' + post._id}>
                         <li key={post._id} id={post._id}>
                           <div className="post">
                             <img src={post.image} alt={post.image} />

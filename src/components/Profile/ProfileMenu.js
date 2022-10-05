@@ -14,16 +14,17 @@ const ProfileMenu = (props) => {
         <a href={'/' + props.uid}>
           <li>Profile</li>
         </a>
-        <a href={'/activity/' + props.uid}>
-          <li>Activity</li>
+        <a href={'/showcase-nft/' + props.wallet}>
+          <li>NFTS Minted</li>
         </a>
         <a href={'/posts/' + props.uid}>
           <li>Posts</li>
         </a>
         <a href={'/followers/' + props.uid}>
           <li>Followers</li>
-        </a>uid
-        <a href={'/transactions/' + props.uid}>
+        </a>
+
+        <a href={'/transcation/' + props.uid}>
           <li>Transactions</li>
         </a>
       </ul>
@@ -32,9 +33,7 @@ const ProfileMenu = (props) => {
         <h2>View Profile Also At</h2>
       </center>
       <div className="buttons">
-        <a
-          href={'https://etherscan.io/address/' + props.uid}
-          target="_blank">
+        <a href={'https://etherscan.io/address/' + props.uid} target="_blank">
           <Button variant="contained" startIcon={<MonetizationOnIcon />}>
             EtherScan
           </Button>
@@ -51,9 +50,7 @@ const ProfileMenu = (props) => {
             PolygonScan
           </Button>
         </a>
-        <a
-          href={'https://snowtrace.io/address/' + props.uid}
-          target="_blank">
+        <a href={'https://snowtrace.io/address/' + props.uid} target="_blank">
           <Button variant="contained" startIcon={<CurrencyExchangeIcon />}>
             SnowTrace
           </Button>

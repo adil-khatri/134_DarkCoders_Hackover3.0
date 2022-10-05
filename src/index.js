@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import Login from './components/Login';
 import Register from './components/Register';
 import Page404 from './components/Page404';
@@ -15,27 +15,33 @@ import Users from './components/Users/Users';
 import {MoralisProvider} from 'react-moralis';
 import Comment from './components/Comment';
 import AddNftpage from './components/MarketPlace/AddNftpage';
+import MarketPlace from './components/MarketPlace/MarketPlace';
+import Showcase from './components/posts/Showcase';
+import Transcation from './components/Profile/Transcation';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-    <MoralisProvider
-  appId="n19572pX5K7PJen1TcnEDizQaDnMQxf7zgAmDnoh"
-  serverUrl="https://ya7rkwykqzkd.usemoralis.com:2053/server">
-      <Routes>
-        <Route path="/" element={<App />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/Register" element={<Register />} />
-        <Route path="/comment" element={<Comment />} />
-        <Route path="/create-post" element={<CreatePost />} />
-        <Route path="/marketplace" element={<AddNftpage />} />
-        <Route path="/posts/:uid" element={<ViewPosts />} />
-        <Route path="/:uid" element={<Profile />} />
-        <Route path="/p-self/:postid" element={<SinglePost />} />
-        <Route path="/users" element={<Users />} />
-        <Route exact path="*" element={<Page404 msg="404" />} />
-        <Route exact path="/error" element={<Page404 msg="403" />} />
-      </Routes>
+      <MoralisProvider
+        appId="ni9S72pX5K7PJen1TcnEDizQaDnMQxf7zgAmDnOh"
+        serverUrl="https://ya7rkwykqzkd.usemoralis.com:2053/server">
+        <Routes>
+          <Route path="/" element={<App />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/Register" element={<Register />} />
+          <Route path="/comment" element={<Comment />} />
+          <Route path="/create-post" element={<CreatePost />} />
+          <Route path="/MarketPlace" element={<MarketPlace />} />
+          <Route path="/create-Nft" element={<AddNftpage />} />
+          <Route path="/posts/:uid" element={<ViewPosts />} />
+          <Route path="/:uid" element={<Profile />} />
+          <Route path="/post/:postid" element={<SinglePost />} />
+          <Route path="/users" element={<Users />} />
+          <Route path="/showcase-nft/:uid" element={<Showcase />} />
+          <Route path="/transcation/:uid" element={<Transcation />} />
+          <Route exact path="*" element={<Page404 msg="404" />} />
+          <Route exact path="/error" element={<Page404 msg="403" />} />
+        </Routes>
       </MoralisProvider>
     </BrowserRouter>
   </React.StrictMode>

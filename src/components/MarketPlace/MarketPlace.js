@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import Header from '../Header';
 import Sidebar from '../Sidebar';
-import '../sass/sidebar.scss';
-import ShowSinglePost from './ShowSinglePost';
+import AddNFT from './AddNFT';
+import Market from './Market';
 
-const SinglePost = () => {
+const MarketPlace = () => {
   const [user, setUser] = useState({});
   useEffect(() => {
     if (sessionStorage.getItem('user') !== null) {
@@ -13,6 +13,7 @@ const SinglePost = () => {
       setUser();
     }
   }, []);
+
   return (
     <>
       <Header />
@@ -23,7 +24,7 @@ const SinglePost = () => {
             wallet={user.wallet}
             profile_url={user.profile_url}
           />
-          <ShowSinglePost
+          <Market
             username={user.username}
             wallet={user.wallet}
             profile_url={user.profile_url}
@@ -34,4 +35,4 @@ const SinglePost = () => {
   );
 };
 
-export default SinglePost;
+export default MarketPlace;
