@@ -16,8 +16,16 @@ import {MoralisProvider} from 'react-moralis';
 import Comment from './components/Comment';
 import AddNftpage from './components/MarketPlace/AddNftpage';
 import MarketPlace from './components/MarketPlace/MarketPlace';
+import Transcation from './components/Users/Transcation';
+import Chat from './Chat/Chat';
 import Showcase from './components/posts/Showcase';
-import Transcation from './components/Profile/Transcation';
+import UserSearch from './components/posts/UserSearch';
+import Groups from './components/Groups/Groups';
+import Create_Group from './components/Groups/Create_Group';
+import SingleGroup from './components/Groups/SingleGroup';
+import SingleGroupMemberList from './components/Groups/SingleGroupMemberList';
+import GroupPosts from './components/Groups/GroupPosts';
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
@@ -33,6 +41,8 @@ root.render(
           <Route path="/create-post" element={<CreatePost />} />
           <Route path="/MarketPlace" element={<MarketPlace />} />
           <Route path="/create-Nft" element={<AddNftpage />} />
+          <Route path="/search/:search" element={<UserSearch />} />
+
           <Route path="/posts/:uid" element={<ViewPosts />} />
           <Route path="/:uid" element={<Profile />} />
           <Route path="/post/:postid" element={<SinglePost />} />
@@ -41,6 +51,15 @@ root.render(
           <Route path="/transcation/:uid" element={<Transcation />} />
           <Route exact path="*" element={<Page404 msg="404" />} />
           <Route exact path="/error" element={<Page404 msg="403" />} />
+          <Route exact path="/messages" element={<Chat />} />
+          <Route path="/groups" element={<Groups />} />
+          <Route path="/create-group" element={<Create_Group />} />
+          <Route path="/group/:gid" element={<SingleGroup />} />
+          <Route
+            path="/group/:gid/members"
+            element={<SingleGroupMemberList />}
+          />
+          <Route path="/group/:gid/posts" element={<GroupPosts />} />
         </Routes>
       </MoralisProvider>
     </BrowserRouter>

@@ -41,11 +41,6 @@ const ShowUsersList = (props) => {
       });
   };
 
-  //To generate Random background Color
-  const generateColor = () => {
-    const color = '#' + Math.random().toString(16).substr(-6);
-    return color;
-  };
   const getPosts = async () => {
     await axios.get('http://localhost:5001/').then((res) => {
       setLoading(false);
@@ -82,60 +77,66 @@ const ShowUsersList = (props) => {
         ) : (
           <>
             <ul>
-              {users.map((user) => (
+              {users !== [] ? (
                 <>
-                  {user.username === sessionData.username ? (
-                    <></>
-                  ) : (
+                  {users.map((user) => (
                     <>
-                      <li key={user._id}>
-                        <div className="user">
-                          <div
-                            className="user-profile"
-                            style={{backgroundColor: generateColor()}}>
-                            {user.profile_url === null ? (
-                              <>
-                                <img
-                                  alt={user.username}
-                                  src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
-                                />
-                              </>
-                            ) : (
-                              <>
-                                <img
-                                  alt={user.username}
-                                  src={user.profile_url}
-                                />
-                              </>
-                            )}
-                          </div>
-                          <div className="user-info">
-                            <span>{user.username}</span>
-                            <span>{user.wallet}</span>
-                            <div className="counts">
-                              <span>
-                                {post_count(user.username, (count = 0))}
-                                <br />
-                                Posts
-                              </span>
-                              <span>
-                                32
-                                <br />
-                                Followers
-                              </span>
+                      {user.username === sessionData.username ? (
+                        <></>
+                      ) : (
+                        <>
+                          <li key={user._id}>
+                            <div className="user">
+                              <div
+                                className="user-profile"
+                                style={{backgroundColor: '#6d71e3'}}>
+                                {user.profile_url === null ? (
+                                  <>
+                                    <img
+                                      alt={user.username}
+                                      src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+                                    />
+                                  </>
+                                ) : (
+                                  <>
+                                    <img
+                                      alt={user.username}
+                                      src={user.profile_url}
+                                    />
+                                  </>
+                                )}
+                              </div>
+                              <div className="user-info">
+                                <span>{user.username}</span>
+                                <span>{user.wallet}</span>
+                                <div className="counts">
+                                  <span>
+                                    {post_count(user.username, (count = 0))}
+                                    <br />
+                                    Posts + NFTs
+                                  </span>
+                                  <span>
+                                    {user.followers.length}
+                                    <br />
+                                    Followers
+                                  </span>
+                                </div>
+                                <center>
+                                  <a href={`/${user.wallet}`}>
+                                    <button>View Profile</button>
+                                  </a>
+                                </center>
+                              </div>
                             </div>
-                            <center>
-                              <a href={`/${user.wallet}`}>
-                                <button>View Profile</button>
-                              </a>
-                            </center>
-                          </div>
-                        </div>
-                      </li>
+                          </li>
+                        </>
+                      )}
                     </>
-                  )}
+                  ))}
                 </>
-              ))}
+              ) : (
+                <></>
+              )}
             </ul>
           </>
         )}

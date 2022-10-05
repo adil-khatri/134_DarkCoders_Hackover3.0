@@ -19,7 +19,7 @@ const Profile = () => {
 
   return (
     <>
-      {console.log(uid.uid)}
+      {/* {console.log(uid.uid)} */}
       <Header />
       <section className="wrapper">
         <section className="container">
@@ -29,11 +29,17 @@ const Profile = () => {
             profile_url={user.profile_url}
           />
           <div className="profile-column">
-            <ViewProfile />
+            <ViewProfile
+              username={user.username}
+              uid={user._id}
+              wallet={user.wallet}
+              userid={uid.uid}
+            />
             <ProfileMenu
               username={user.username}
-              uid={uid.uid}
+              uid={user._id}
               wallet={user.wallet}
+              userid={uid.uid}
             />
           </div>
         </section>

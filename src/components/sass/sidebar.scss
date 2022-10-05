@@ -53,7 +53,7 @@ body {
                 list-style: none;
                 display: flex;
                 flex-direction: column;
-                gap: 20px;
+                gap: 30px;
                 margin-left: -20px;
 
                 li {
@@ -85,7 +85,6 @@ body {
             max-width: 1500px;
 
             .greetings {
-                height: 70px;
                 width: 90%;
                 background-color: #fff;
                 border-radius: 5px;
@@ -191,7 +190,6 @@ body {
 
         .posts-section {
             height: auto;
-            width: 55vw;
             max-width: 1500px;
             display: flex;
             flex-direction: column;
@@ -283,7 +281,7 @@ body {
                         display: flex;
                         justify-content: center;
                         align-items: center;
-                        border: 2px solid $button;
+                        border: none;
                         background-color: transparent;
                         color: #fff;
                         border-radius: 5px;
@@ -325,5 +323,9 @@ body {
 
     .post-image {
         max-width: 300px !important;
+    }
+
+    .container {
+        padding-left: 2vw;
     }
 }

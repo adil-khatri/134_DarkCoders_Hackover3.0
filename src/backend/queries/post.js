@@ -22,6 +22,37 @@ router.post('/create-post', (req, res) => {
     });
 });
 
+//Deleting a Post
+router.delete('/deletepost/:postId', (req, res) => {
+  Post.findOne({_id: req.params.postId})
+    .deleteOne()
+    .then(() => {
+      res.status(201).json({message: 'Post Deleted Successfully'});
+    })
+    .catch(() => {
+      res
+        .status(500)
+        .json({message: 'Internal Server Error cannot delete postc'});
+    });
+});
+
+//Delete a Comment
+router.delete('/delete-comment/:postid', (req, res) => {
+  Comment.findOne({postId: req.params.postid})
+    .deleteOne()
+    .then(() => {
+      res.status(201).json({message: 'Comment Deleted Successfully'});
+    })
+    .catch(() => {
+      res
+        .status(500)
+        .json({message: 'Internal Server Error cannot delete Comment'});
+    });
+});
+
+
+
+//Adding a NFT Minted Data in Backend
 router.post('/MarketPlace', (req, res) => {
   const {image, token_name, wallet, username, description} = req.body;
   const post = new AddNFT({image, wallet, username, token_name, description});
@@ -35,6 +66,7 @@ router.post('/MarketPlace', (req, res) => {
     });
 });
 
+//Getting Posts for a particular User
 router.get('/posts/:uid', async (req, res) => {
   const wallet = req.params.uid;
   const user_posts = await Post.find({wallet: wallet}).then((doc) => {
@@ -46,16 +78,18 @@ router.get('/posts/:uid', async (req, res) => {
   });
 });
 
+//Getting Transactions for a particular User
 router.get('/transcation/:uid', async (req, res) => {
-  const to = req.params.uid;
-  const user_posts = await Transaction.find({to: to}).then((doc) => {
-    if (!doc) {
-      res.status(404).json({message: 'No transcation Found'});
-    } else {
-      res.status(203).json({doc});
-      console.log('hello :::::::::', res.json({doc}));
-    }
-  });
+  const user_id = req.params.uid;
+  const user_transaction = await Transaction.find({userId: user_id})
+    .sort({createdAt: -1})
+    .then((doc) => {
+      if (!doc) {
+        res.status(404).json({message: 'No transcation Found'});
+      } else {
+        res.status(203).json({doc});
+      }
+    });
 });
 
 //Showings Users of App
@@ -72,8 +106,38 @@ router.get('/users', (req, res) => {
     });
 });
 
+//Function for search of users
+router.get('/search', (req, res) => {
+  const usersData = User.find()
+    .then((doc) => {
+      if (!doc) {
+        res.status(404).json({message: 'No transcation Found'});
+      } else {
+        res.json(doc);
+      }
+    })
+    .catch((err) => {
+      res.status(500).json({error: 'No Data Found'});
+    });
+});
+
+router.get('/posts', async (req, res) => {
+  const posts = await Post.find()
+    .then((doc) => {
+      if (!doc) {
+        res.status(404).json({message: 'No Posts Found'});
+      } else {
+        res.json(doc);
+      }
+    })
+    .catch((err) => {
+      res.status(500).json({error: 'No Data Found'});
+    });
+});
+
 //home page post
 router.get('/', async (req, res) => {
+  const doc = [];
   const posts = Post.aggregate([
     {
       $lookup: {
@@ -83,13 +147,26 @@ router.get('/', async (req, res) => {
         as: 'user_details',
       },
     },
-  ])
-    .sort({createdAt: -1})
-    .then((doc) => {
+  ]).then((data) => {
+    doc.push(...data);
+    const nft_posts = AddNFT.aggregate([
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'username',
+          foreignField: 'username',
+          as: 'user_details',
+        },
+      },
+    ]).then((results) => {
+      doc.push(...results);
+      doc.sort((a, b) => b.createdAt - a.createdAt);
       res.json({doc});
     });
+  });
 });
 
+//Getting users profile Details
 router.get('/:uid', async (req, res) => {
   const Data = {
     users: {},
@@ -184,6 +261,20 @@ router.post('/add-comment', async (req, res) => {
   } catch (err) {
     return res.status(500).json({msg: err.message});
   }
+});
+
+//Show users Self-NFTS
+router.get('/Self-NFT/:uid', async (req, res) => {
+  const userid = req.params.uid;
+  const selfnfts = AddNFT.find({wallet: userid})
+    .sort({createdAt: -1})
+    .then((doc) => {
+      if (!doc) {
+        res.status(500);
+      } else {
+        res.json(doc);
+      }
+    });
 });
 
 module.exports = router;

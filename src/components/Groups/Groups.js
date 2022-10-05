@@ -1,10 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import Header from '../Header';
-import '../sass/sidebar.scss';
 import Sidebar from '../Sidebar';
-import Posts from './Posts';
+import GroupList from './GroupList';
 
-const ViewPosts = () => {
+const Groups = () => {
   const [user, setUser] = useState({});
   useEffect(() => {
     if (sessionStorage.getItem('user') !== null) {
@@ -13,7 +12,6 @@ const ViewPosts = () => {
       setUser();
     }
   }, []);
-
   return (
     <>
       <Header />
@@ -24,8 +22,10 @@ const ViewPosts = () => {
             wallet={user.wallet}
             profile_url={user.profile_url}
           />
-          <Posts 
-          wallet={user.wallet}
+          <GroupList
+            username={user.username}
+            wallet={user.wallet}
+            profile_url={user.profile_url}
           />
         </section>
       </section>
@@ -33,4 +33,4 @@ const ViewPosts = () => {
   );
 };
 
-export default ViewPosts;
+export default Groups;
