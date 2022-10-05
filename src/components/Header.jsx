@@ -1,32 +1,31 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import './sass/header.scss';
 import SendIcon from '@mui/icons-material/Send';
-import { ToastContainer } from 'react-toastify';
+import {ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useNavigate } from 'react-router-dom';
-import { MenuRounded, Search } from '@mui/icons-material';
-import { Avatar } from '@mui/material';
+import {useNavigate} from 'react-router-dom';
+import {MenuRounded, Search} from '@mui/icons-material';
+import {Avatar} from '@mui/material';
 import $ from 'jquery';
+import {useMoralis} from 'react-moralis';
 // import { search } from '../backend/queries/transaction';
 
 const Header = () => {
   const navigate = useNavigate();
   const user = JSON.parse(sessionStorage.getItem('user'));
   var [search, onsearch] = useState([]);
-  useEffect(() => {
-    if (user === null) {
-      navigate('/login');
-    }
-  }, []);
+  const {Moralis} = useMoralis();
   useEffect(() => {
     getUsersData();
+    if (user === null) {
+      navigate('/register');
+    }
   }, []);
 
   const Logout = () => {
     sessionStorage.removeItem('user');
-
     window.location.href = '/';
   };
   // function onsearch2() {
@@ -36,7 +35,7 @@ const Header = () => {
   const [getuser, setusers] = useState([]);
   const getUsersData = async () => {
     await axios
-      .get('http://localhost:5001/getusers/' + user.wallet)
+      .get('https://jinx-social.herokuapp.com/getusers/' + user.wallet)
       .then((res) => {
         setusers(...res.data.doc);
 
@@ -46,7 +45,6 @@ const Header = () => {
         console.log(err);
       });
   };
-
   function showMenu() {
     $('.m-menu').fadeIn();
   }
@@ -54,7 +52,14 @@ const Header = () => {
     <>
       <section className="header">
         <nav>
-          <a href="/">
+          <a
+            href="/"
+            style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
+            <img
+              src="https://res.cloudinary.com/ronaklala-games/image/upload/v1657619895/posts/favicon_dfjgrb.png"
+              height={'40px'}
+              alt="logo"
+            />
             <h2>{process.env.REACT_APP_NAME}</h2>
           </a>
           <div className="search">
@@ -63,9 +68,10 @@ const Header = () => {
               name="search"
               onChange={(e) => onsearch(e.target.value)}
               placeholder="Search User"
+              required
             />
             <a href={'/search/' + search}>
-              <button>
+              <button type="submit">
                 <Search />
               </button>
             </a>
@@ -86,7 +92,7 @@ const Header = () => {
                         <Avatar
                           alt="Remy Sharp"
                           src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
-                          sx={{ width: 30, height: 30 }}
+                          sx={{width: 30, height: 30}}
                         />
                       </>
                     ) : (
@@ -94,7 +100,7 @@ const Header = () => {
                         <Avatar
                           alt="Remy Sharp"
                           src={getuser.profile_url}
-                          sx={{ width: 30, height: 30 }}
+                          sx={{width: 30, height: 30}}
                         />
                       </>
                     )}

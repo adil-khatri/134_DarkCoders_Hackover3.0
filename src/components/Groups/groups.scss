@@ -27,7 +27,7 @@
         li {
             height: 350px;
             width: 300px;
-            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 15px;
             box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.5);
             display: flex;
@@ -55,7 +55,7 @@
                         bottom: -40px;
                         z-index: 999;
                         border-radius: 5%;
-                        max-height: 150px;
+                        max-height: 100px;
                         max-width: 150px;
                     }
                 }
@@ -78,13 +78,11 @@
                         width: 100%;
                         justify-content: center;
                         align-items: center;
-                        gap: 20px;
                         padding-bottom: 10px;
                     }
 
                     button {
                         height: 35px;
-                        width: 180px;
                         background-color: $button;
                         color: #fff;
                         border: none;
@@ -149,8 +147,10 @@
 
         li {
             button {
+                padding: 10px;
                 height: 45px;
-                width: 180px;
+                width: 100%;
+                background-color: $button;
                 border: none;
                 border-radius: 5px;
             }
@@ -208,9 +208,14 @@
         margin-left: -40px;
 
         li {
+            a {
+                word-break: break-word;
+                color: #fff;
+            }
+
             height: auto;
             width: 40vw;
-            background-color: rgba(255, 255, 255, 0.1);
+            border:1px solid rgba(255, 255, 255, 0.15);
             border-radius: 5px;
             padding: 10px;
             display: flex;
@@ -232,6 +237,22 @@
                     height: auto;
                     width: auto;
                     max-width: 80%;
+                }
+            }
+
+            .post-footer {
+                display: flex;
+                gap: 15px;
+
+                button {
+                    display: flex;
+                    height: 45px;
+                    border-radius: 5px;
+                    background-color: transparent;
+                    justify-content: center;
+                    align-items: center;
+                    color: #fff;
+                    border: none;
                 }
             }
         }
@@ -287,7 +308,8 @@
             align-items: center;
 
             li {
-                width: 90vw;
+                max-width: 90vw;
+                width: auto;
             }
         }
     }

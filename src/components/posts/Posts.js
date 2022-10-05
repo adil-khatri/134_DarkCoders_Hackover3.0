@@ -1,12 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
+import {useParams} from 'react-router-dom';
 import '../sass/sidebar.scss';
-import { css } from '@emotion/react';
-import { SyncLoader } from 'react-spinners';
-import { Delete } from '@mui/icons-material';
-import { toast } from 'react-toastify';
+import {css} from '@emotion/react';
+import {SyncLoader} from 'react-spinners';
+import {Delete} from '@mui/icons-material';
+import {toast} from 'react-toastify';
 
 const Posts = (props) => {
   const [posts, setPosts] = useState([]);
@@ -29,13 +29,16 @@ const Posts = (props) => {
       setUser();
     }
     getPosts();
+    document.title = 'Posts';
   }, []);
   const getPosts = async () => {
-    await axios.get('http://localhost:5001/posts/' + wallet.uid).then((res) => {
-      setLoading(false);
-      setPosts(res.data.doc);
-      console.log(posts);
-    });
+    await axios
+      .get('https://jinx-social.herokuapp.com/posts/' + wallet.uid)
+      .then((res) => {
+        setLoading(false);
+        setPosts(res.data.doc);
+        console.log(posts);
+      });
   };
 
   let axiosConfig = {
@@ -48,7 +51,10 @@ const Posts = (props) => {
   //Function to delete a post
   function deletePost(postId) {
     axios
-      .delete(`/deletepost/${postId}`, axiosConfig)
+      .delete(
+        `https://jinx-social.herokuapp.com/deletepost/${postId}`,
+        axiosConfig
+      )
       .then((res) => {
         toast.success('Post Deleted Successfully', {
           toastId: 1234 + 111,
@@ -104,7 +110,15 @@ const Posts = (props) => {
             <div className="post-parent">
               {posts.length === 0 ? (
                 <>
-                  <h1>No Posts Found</h1>
+                  <center style={{width: '100%', marginTop: '20px'}}>
+                    <img
+                      src="https://res.cloudinary.com/ronaklala-games/image/upload/v1657799759/posts/Untitled_design_1_lfhe7e.gif"
+                      height={250}
+                    />
+                    <h1 style={{color: '#fff', fontSize: '36px'}}>
+                      No Posts Found
+                    </h1>
+                  </center>
                 </>
               ) : (
                 <>
@@ -116,7 +130,7 @@ const Posts = (props) => {
                             <img src={post.image} alt={post.image} />
                           </a>
                           <h3>{post.tag}</h3>
-                          {post.username === user.username ? (
+                          {post.wallet === user.wallet ? (
                             <>
                               <section className="showcase">
                                 <button

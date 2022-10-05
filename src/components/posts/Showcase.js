@@ -1,5 +1,6 @@
 /* eslint-disable react/jsx-pascal-case */
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
+import FooterSection from '../FooterSection';
 import Header from '../Header';
 import MobileMenu from '../MobileMenu';
 import Sidebar from '../Sidebar';
@@ -8,6 +9,7 @@ import Self_NFT_Showcase from './Self_NFT_Showcase';
 const Showcase = () => {
   const [user, setUser] = useState({});
   useEffect(() => {
+    document.title = 'NFts Minted';
     if (sessionStorage.getItem('user') !== null) {
       setUser(JSON.parse(sessionStorage.getItem('user')));
     } else {
@@ -32,6 +34,7 @@ const Showcase = () => {
           />
         </section>
       </section>
+      <FooterSection />
     </>
   );
 };

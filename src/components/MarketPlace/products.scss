@@ -18,7 +18,7 @@
         width: 200px;
         padding: 10px;
         margin-left: 40px;
-        background-color: #285EDB;
+        background: rgba(255, 255, 255, 0.1);
         color: #fff;
         font-family: $font2;
         padding-bottom: 30px;
@@ -36,8 +36,8 @@
         li {
             height: auto;
             width: auto;
-            max-width: 300px;
-            max-height: 350px;
+            max-width: 350px;
+            max-height: 550px;
             background-color: transparent;
             display: flex;
             flex-direction: column;
@@ -46,13 +46,14 @@
             gap: 15px;
             padding-bottom: 10px;
             padding: 15px;
-            background-color: rgba(255, 255, 255, 0.01);
+            border-radius: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
 
             img {
                 height: auto;
                 width: auto;
-                max-height: 150px;
-                max-width: 250px;
+                max-height: 350px;
+                max-width: 300px;
             }
 
             .user-info {
@@ -67,6 +68,7 @@
                     width: 200px;
                     text-overflow: ellipsis;
                 }
+
 
                 img {
                     height: 35px;
@@ -89,19 +91,73 @@
             }
 
             button {
-                width: 180px;
+                width: 100%;
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 gap: 15px;
                 font-size: auto;
                 font-family: $font2;
-                background-color: $bg;
+                background-color: rgba(255, 255, 255, 0.1);
                 color: #fff;
                 padding: 10px;
                 border-radius: 5px;
                 border: none;
             }
+        }
+    }
+}
+
+.single-nft {
+    height: auto;
+    width: 75%;
+    max-width: 1500px;
+    margin-top: 20px;
+    display: flex;
+
+    .nft-image {
+        height: 100%;
+        width: 60%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        img {
+            height: auto;
+            width: auto;
+            max-height: 80%;
+            max-width: 80%;
+            border-radius: 15px;
+        }
+    }
+
+    .info {
+        height: 100%;
+        width: 40%;
+        display: flex;
+        flex-direction: column;
+        padding: 10px;
+        gap: 15px;
+
+        button {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            font-size: auto;
+            font-family: $font2;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
     }
 }
@@ -130,6 +186,16 @@
                     max-width: 300px;
                 }
             }
+        }
+    }
+
+    .single-nft {
+        flex-direction: column !important;
+        width: 98%;
+
+        .info,
+        .nft-image {
+            width: 100% !important;
         }
     }
 }

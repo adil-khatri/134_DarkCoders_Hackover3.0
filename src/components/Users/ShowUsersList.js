@@ -2,11 +2,10 @@
 /* eslint-disable array-callback-return */
 /* eslint-disable no-unused-vars */
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { SyncLoader } from 'react-spinners';
+import React, {useEffect, useState} from 'react';
+import {SyncLoader} from 'react-spinners';
 import './users.scss';
-import { css } from '@emotion/react';
-import { count } from '../../backend/schemas/userSchema';
+import {css} from '@emotion/react';
 
 const ShowUsersList = (props) => {
   const [users, setUsers] = useState({});
@@ -34,7 +33,7 @@ const ShowUsersList = (props) => {
   const [posts, setPosts] = useState([]);
   const getUsersData = async () => {
     await axios
-      .get('http://localhost:5001/users')
+      .get('https://jinx-social.herokuapp.com/users')
       .then((res) => {
         setUsers(res.data);
         setLoading(false);
@@ -45,7 +44,7 @@ const ShowUsersList = (props) => {
   };
 
   const getPosts = async () => {
-    await axios.get('http://localhost:5001/').then((res) => {
+    await axios.get('https://jinx-social.herokuapp.com/').then((res) => {
       setLoading(false);
       setPosts(res.data.doc);
       console.log(posts);
@@ -53,6 +52,7 @@ const ShowUsersList = (props) => {
   };
 
   useEffect(() => {
+    document.title = 'Users';
     getUsersData();
     getPosts();
   }, []);
@@ -80,66 +80,62 @@ const ShowUsersList = (props) => {
         ) : (
           <>
             <ul>
-              {users !== [] ? (
+              {users.map((user) => (
                 <>
-                  {users.map((user) => (
+                  {user.username === sessionData.username ? (
+                    <></>
+                  ) : (
                     <>
-                      {user.username === sessionData.username ? (
-                        <></>
-                      ) : (
-                        <>
-                          <li key={user._id}>
-                            <div className="user">
-                              <div
-                                className="user-profile"
-                                style={{ backgroundColor: '#6d71e3' }}>
-                                {user.profile_url === null ? (
-                                  <>
-                                    <img
-                                      alt={user.username}
-                                      src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
-                                    />
-                                  </>
-                                ) : (
-                                  <>
-                                    <img
-                                      alt={user.username}
-                                      src={user.profile_url}
-                                    />
-                                  </>
-                                )}
-                              </div>
-                              <div className="user-info">
-                                <span>{user.username}</span>
-                                <span>{user.wallet}</span>
-                                <div className="counts">
-                                  <span>
-                                    {post_count(user.username, (count = 0))}
-                                    <br />
-                                    Posts + NFTs
-                                  </span>
-                                  <span>
-                                    {user.followers.length}
-                                    <br />
-                                    Followers
-                                  </span>
-                                </div>
-                                <center>
-                                  <a href={`/${user.wallet}`}>
-                                    <button>View Profile</button>
-                                  </a>
-                                </center>
-                              </div>
+                      <li key={user._id}>
+                        <div className="user">
+                          <div
+                            className="user-profile"
+                            style={{
+                              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                            }}>
+                            {user.profile_url === null ? (
+                              <>
+                                <img
+                                  alt={user.username}
+                                  src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+                                />
+                              </>
+                            ) : (
+                              <>
+                                <img
+                                  alt={user.username}
+                                  src={user.profile_url}
+                                />
+                              </>
+                            )}
+                          </div>
+                          <div className="user-info">
+                            <span>{user.username}</span>
+                            <span>{user.wallet}</span>
+                            <div className="counts">
+                              <span>
+                                {post_count(user.username, 0)}
+                                <br />
+                                Posts + NFTs
+                              </span>
+                              <span>
+                                {user.followers.length}
+                                <br />
+                                Followers
+                              </span>
                             </div>
-                          </li>
-                        </>
-                      )}
+                            <center>
+                              <a href={`/${user.wallet}`}>
+                                <button>View Profile</button>
+                              </a>
+                            </center>
+                          </div>
+                        </div>
+                      </li>
                     </>
-                  ))}
+                  )}
                 </>
-              ) : (
-                <></>
-              )}
+              ))}
             </ul>
           </>
         )}

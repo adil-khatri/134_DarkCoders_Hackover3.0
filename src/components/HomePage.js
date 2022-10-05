@@ -4,21 +4,22 @@
 /* eslint-disable eqeqeq */
 /* eslint-disable no-unused-vars */
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import './sass/sidebar.scss';
-import { SyncLoader } from 'react-spinners';
-import { css } from '@emotion/react';
-import { Avatar } from '@mui/material';
-import { Icon } from '@iconify/react';
-import { useMoralis } from 'react-moralis';
-import { toast } from 'react-toastify';
+import {MoonLoader, PuffLoader, SyncLoader} from 'react-spinners';
+import {css} from '@emotion/react';
+import {Avatar} from '@mui/material';
+import {Icon} from '@iconify/react';
+import {useMoralis} from 'react-moralis';
+import {toast} from 'react-toastify';
 import moment from 'moment';
 import $ from 'jquery';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 
 const HomePage = (props) => {
-  const { Moralis, isAuthenticated, authenticate } = useMoralis();
+  document.title = 'JinX - Home';
+  const {Moralis, isAuthenticated, authenticate} = useMoralis();
   //Function for if a post has link in it, it will make it redirectable
   function urlify(text) {
     var urlRegex = /(https?:\/\/[^\s]+)/g;
@@ -59,6 +60,7 @@ const HomePage = (props) => {
 
   //User Data
   const [user, setUser] = useState({});
+  const [button, setBtnLoading] = useState(true);
 
   const [time, setTime] = useState({});
   let [loading, setLoading] = useState(true);
@@ -69,16 +71,18 @@ const HomePage = (props) => {
 
   //Getting Posts from backend and storing in Posts State
   const getPosts = async () => {
-    await axios.get('http://localhost:5001/').then((res) => {
+    await axios.get('https://jinx-social.herokuapp.com/').then((res) => {
       setPosts(res.data.doc);
       setLoading(false);
     });
   };
 
   const getSavePosts = async () => {
-    await axios.get('http://localhost:5001/savepost').then((res) => {
-      getsavePosts(res.data.doc);
-    });
+    await axios
+      .get('https://jinx-social.herokuapp.com/savepost')
+      .then((res) => {
+        getsavePosts(res.data.doc);
+      });
   };
 
   //to save post
@@ -91,13 +95,15 @@ const HomePage = (props) => {
     if (window.confirm(text) == true) {
       await axios
         .post(
-          'http://localhost:5001/save',
-          { postid, username, userid, image },
+          'https://jinx-social.herokuapp.com/save',
+          {postid, username, userid, image},
           axiosConfig
         )
         .then((res) => {
           console.log(res);
-          window.location.reload();
+          toast.success('Post Saved Successfully', {
+            toastId: 123,
+          });
         });
     }
   };
@@ -145,7 +151,10 @@ const HomePage = (props) => {
           });
           setTimeout(() => {
             console.log(transactionDetails);
-            axios.post('http://localhost:5001/user_tip', transactionDetails);
+            axios.post(
+              'https://jinx-social.herokuapp.com/user_tip',
+              transactionDetails
+            );
           }, 3000);
         })
         .catch((err) => {
@@ -178,12 +187,14 @@ const HomePage = (props) => {
   function isLiked(id) {
     $('#like' + id).hide();
     $('#unlike' + id).show();
+    setBtnLoading(false);
   }
 
   //Function for if a post is not liked by user
   function isunLiked(id) {
     $('#like' + id).show();
     $('#unlike' + id).hide();
+    setBtnLoading(false);
   }
 
   let axiosConfig = {
@@ -191,6 +202,11 @@ const HomePage = (props) => {
       'Content-Type': 'application/json;charset=UTF-8',
       'Access-Control-Allow-Origin': '*',
     },
+  };
+  const checkLike = (post) => {
+    setTimeout(() => {
+      post.likes.includes(user._id) ? isLiked(post._id) : isunLiked(post._id);
+    }, 500);
   };
 
   //function for LIKING a post
@@ -202,7 +218,7 @@ const HomePage = (props) => {
 
     await axios
       .put(
-        'http://localhost:5001/likes',
+        'https://jinx-social.herokuapp.com/likes',
         JSON.stringify(user_data),
         axiosConfig
       )
@@ -214,7 +230,7 @@ const HomePage = (props) => {
         $('#like' + id).hide();
         $('#unlike' + id).show();
       })
-      .catch((err) => { });
+      .catch((err) => {});
   };
 
   //function for UNLIKING a post
@@ -225,7 +241,7 @@ const HomePage = (props) => {
     };
     await axios
       .put(
-        'http://localhost:5001/unlikes',
+        'https://jinx-social.herokuapp.com/unlikes',
         JSON.stringify(user_data_),
         axiosConfig
       )
@@ -237,7 +253,7 @@ const HomePage = (props) => {
         $('#like' + id).show();
         $('#unlike' + id).hide();
       })
-      .catch((err) => { });
+      .catch((err) => {});
   };
 
   return (
@@ -289,7 +305,16 @@ const HomePage = (props) => {
           <>
             {posts.length == 0 ? (
               <>
-                <h1>No Posts Found For Your Wallet</h1>
+                <center style={{width: '100%', marginTop: '20px'}}>
+                  <img
+                    src="https://res.cloudinary.com/ronaklala-games/image/upload/v1657799759/posts/Untitled_design_1_lfhe7e.gif"
+                    height={250}
+                    alt="logo"
+                  />
+                  <h1 style={{color: '#fff', fontSize: '36px'}}>
+                    No Posts Found
+                  </h1>
+                </center>
                 <a href="/create-post">
                   <button>Create One Now</button>
                 </a>
@@ -311,30 +336,43 @@ const HomePage = (props) => {
                                   <Avatar
                                     alt="Profile Image"
                                     src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
-                                    sx={{ width: 26, height: 26 }}
+                                    sx={{width: 26, height: 26}}
                                     key={user._id}
                                   />
+                                  <a
+                                    style={{color: '#fff'}}
+                                    href={'/' + post.wallet}>
+                                    <b>
+                                      {user.username}
+                                      <greyscale>
+                                        Minted{' '}
+                                        {moment(post.createdAt).fromNow()}
+                                      </greyscale>
+                                    </b>
+                                  </a>
                                 </>
                               ) : (
                                 <>
                                   <Avatar
                                     alt="Profile Image"
                                     src={user.profile_url}
-                                    sx={{ width: 26, height: 26 }}
+                                    sx={{width: 26, height: 26}}
                                     key={user._id}
                                   />
+                                  <a
+                                    style={{color: '#fff'}}
+                                    href={'/' + post.wallet}>
+                                    <b>
+                                      {user.username}
+                                      <greyscale>
+                                        Minted{' '}
+                                        {moment(post.createdAt).fromNow()}
+                                      </greyscale>
+                                    </b>
+                                  </a>
                                 </>
                               )
                             )}
-
-                            <a style={{ color: '#fff' }} href={'/' + post.wallet}>
-                              <b>
-                                {post.username}
-                                <greyscale>
-                                  Minted {moment(post.createdAt).fromNow()}
-                                </greyscale>
-                              </b>
-                            </a>
                           </div>
                           <div className="user-caption">
                             <span
@@ -346,7 +384,7 @@ const HomePage = (props) => {
                             <></>
                           ) : (
                             <>
-                              <a href={'#'}>
+                              <a href={'/nft/' + post._id}>
                                 {' '}
                                 <img
                                   alt="Post Image"
@@ -375,7 +413,7 @@ const HomePage = (props) => {
                                   <Avatar
                                     alt="Profile Image"
                                     src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
-                                    sx={{ width: 26, height: 26 }}
+                                    sx={{width: 26, height: 26}}
                                     key={user._id}
                                   />
                                 </>
@@ -384,14 +422,14 @@ const HomePage = (props) => {
                                   <Avatar
                                     alt="Profile Image"
                                     src={user.profile_url}
-                                    sx={{ width: 26, height: 26 }}
+                                    sx={{width: 26, height: 26}}
                                     key={user._id}
                                   />
                                 </>
                               )
                             )}
 
-                            <a style={{ color: '#fff' }} href={`/${post.wallet}`}>
+                            <a style={{color: '#fff'}} href={`/${post.wallet}`}>
                               <b>
                                 {post.username}
                                 <greyscale>
@@ -421,94 +459,119 @@ const HomePage = (props) => {
                             </>
                           )}
 
-                          <div className="buttons">
-                            {post.likes.includes(user._id)
-                              ? isLiked(post._id)
-                              : isunLiked(post._id)}
-
-                            <button
-                              id={'unlike' + post._id}
-                              type="submit"
-                              style={{ display: 'none' }}
-                              onClick={() => {
-                                unlikePost(post._id);
-                              }}>
-                              <FavoriteIcon />
-                            </button>
-
-                            <button
-                              id={'like' + post._id}
-                              type="submit"
-                              onClick={() => {
-                                likePost(post._id);
-                              }}>
-                              <FavoriteBorderIcon />
-                            </button>
-                            {post.username === user.username ? (
-                              <></>
-                            ) : (
-                              <>
+                          {checkLike(post)}
+                          {button === true ? (
+                            <>
+                              <PuffLoader color="#fff" size={30} />
+                            </>
+                          ) : (
+                            <>
+                              <div className="buttons">
                                 <button
-                                  onClick={handleTip(post.wallet, post._id)}>
-                                  Tip 0.005 &nbsp;
-                                  <Icon icon="mdi:ethereum" />
+                                  id={'unlike' + post._id}
+                                  type="submit"
+                                  style={{display: 'none'}}
+                                  onClick={() => {
+                                    unlikePost(post._id);
+                                  }}>
+                                  <FavoriteIcon />
                                 </button>
-                              </>
-                            )}
-                          </div>
 
-                          <div className="comment-section">
-                            {post.likes.length > 0 ? (
-                              <>
-                                <span class={'likes' + post._id}>
-                                  {post.likes.length}
-                                </span>
-                                Likes
-                              </>
-                            ) : (
-                              <>
-                                <span class={'likes' + post._id}>0</span>
-                                likes
-                              </>
-                            )}
-                            <span>{post.comment.length} Comments</span>
-                            {getsavepost.filter(
-                              (e) =>
-                                e.username == user.username &&
-                                e.postid == post._id
-                            ).length > 0 ? (
-                              // {getsavepost[ind].postid!=(post._id)  && getsavepost[ind].username!=(post.username)
-                              <button
-                                style={{
-                                  background: 'none',
-                                  outline: 'none',
-                                  color: '#fefe',
-                                  border: 'none',
-                                }}
-                                disabled>
-                                Saved
-                              </button>
-                            ) : (
-                              <button
-                                style={{
-                                  background: 'none',
-                                  outline: 'none',
-                                  color: '#fff',
-                                  border: 'none',
-                                }}
-                                onClick={(event) =>
-                                  save(
-                                    event,
-                                    post._id,
-                                    user.username,
-                                    user._id,
-                                    post.image
-                                  )
-                                }>
-                                <span>Save</span>
-                              </button>
-                            )}
-                          </div>
+                                <button
+                                  id={'like' + post._id}
+                                  type="submit"
+                                  style={{display: 'none'}}
+                                  onClick={() => {
+                                    likePost(post._id);
+                                  }}>
+                                  <FavoriteBorderIcon />
+                                </button>
+                                {post.username === user.username ? (
+                                  <></>
+                                ) : (
+                                  <>
+                                    <button
+                                      onClick={handleTip(
+                                        post.wallet,
+                                        post._id
+                                      )}>
+                                      Tip 0.005 &nbsp;
+                                      <Icon icon="mdi:ethereum" />
+                                    </button>
+                                  </>
+                                )}
+                              </div>
+
+                              <div className="comment-section">
+                                {post.likes.length > 0 ? (
+                                  <>
+                                    <span className={'likes' + post._id}>
+                                      {post.likes.length}
+                                    </span>
+                                    Likes
+                                  </>
+                                ) : (
+                                  <>
+                                    <span className={'likes' + post._id}>
+                                      0
+                                    </span>
+                                    likes
+                                  </>
+                                )}
+                                <a
+                                  href={'/post/' + post._id + '/comments'}
+                                  style={{color: '#fff'}}>
+                                  {post.comment.length === 1 ? (
+                                    <>
+                                      <span>{post.comment.length} Comment</span>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <span>
+                                        {post.comment.length} Comments
+                                      </span>
+                                    </>
+                                  )}
+                                </a>
+                                {getsavepost.filter(
+                                  (e) =>
+                                    e.username == user.username &&
+                                    e.postid == post._id
+                                ).length > 0 ? (
+                                  // {getsavepost[ind].postid!=(post._id)  && getsavepost[ind].username!=(post.username)
+                                  <button
+                                    style={{
+                                      background: 'none',
+                                      outline: 'none',
+                                      color: '#fefe',
+                                      border: 'none',
+                                    }}
+                                    disabled>
+                                    Saved
+                                  </button>
+                                ) : (
+                                  <button
+                                    style={{
+                                      background: 'none',
+                                      outline: 'none',
+                                      color: '#fff',
+                                      border: 'none',
+                                    }}
+                                    onClick={(event) =>
+                                      save(
+                                        event,
+                                        post._id,
+                                        user.username,
+                                        user._id,
+                                        post.image
+                                      )
+                                    }>
+                                    <span>Save</span>
+                                  </button>
+                                )}
+                              </div>
+                            </>
+                          )}
                         </div>
                       </>
                     )

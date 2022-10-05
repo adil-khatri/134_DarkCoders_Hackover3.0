@@ -1,13 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
+import {useNavigate, useParams} from 'react-router-dom';
 import './profile.scss';
-import { toast } from 'react-toastify';
+import {toast} from 'react-toastify';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
-import { PuffLoader, SyncLoader } from 'react-spinners';
-import { css } from '@emotion/react';
+import {PuffLoader, SyncLoader} from 'react-spinners';
+import {css} from '@emotion/react';
 import $ from 'jquery';
 
 const ViewProfile = (props) => {
@@ -30,12 +30,13 @@ const ViewProfile = (props) => {
   useEffect(() => {
     const getUserData = () => {
       axios
-        .get('http://localhost:5001/' + wallet.uid)
+        .get('https://jinx-social.herokuapp.com/' + wallet.uid)
         .then((res) => {
           setuser(res.data.users);
           setFile(res.data.users[0].profile_url);
           setPostCount(res.data.numbers);
           setLoading(false);
+          document.title = res.data.users[0].username;
         })
         .catch((err) => {
           if (err.response.status === 500) {
@@ -68,7 +69,7 @@ const ViewProfile = (props) => {
       url: url,
     };
     await axios
-      .post('http://localhost:5001/user_pic', photo)
+      .post('https://jinx-social.herokuapp.com/user_pic', photo)
       .then((res) => {
         if (res.status === 200) {
           toast.success(
@@ -113,7 +114,9 @@ const ViewProfile = (props) => {
 
   const follow = (id) => {
     axios
-      .post('http://localhost:5001/followuser/' + id + '/' + props.uid)
+      .post(
+        'https://jinx-social.herokuapp.com/followuser/' + id + '/' + props.uid
+      )
       .then((res) => {
         var el = parseInt($('#count').text());
         $('#count').text(el + 1);
@@ -125,7 +128,9 @@ const ViewProfile = (props) => {
 
   const unFollow = (id) => {
     axios
-      .post('http://localhost:5001/unfollowuser/' + id + '/' + props.uid)
+      .post(
+        'https://jinx-social.herokuapp.com/unfollowuser/' + id + '/' + props.uid
+      )
       .then((res) => {
         var el = parseInt($('#count').text());
         $('#count').text(el - 1);
@@ -163,7 +168,7 @@ const ViewProfile = (props) => {
                     <input
                       id="btn-upload"
                       name="btn-upload"
-                      style={{ display: 'none' }}
+                      style={{display: 'none'}}
                       type="file"
                       accept="image/*"
                       onChange={handleChange}
@@ -204,7 +209,11 @@ const ViewProfile = (props) => {
 
                 <span>Number of Posts :- {count}</span>
                 {users.username === props.username ? (
-                  <></>
+                  <>
+                    <a href={'/updateProfile/' + props.wallet}>
+                      <button>Update Profile</button>
+                    </a>
+                  </>
                 ) : (
                   <>
                     {newFunction(users)}
@@ -213,28 +222,29 @@ const ViewProfile = (props) => {
                         <PuffLoader color="red" css={override} size={30} />
                       </>
                     ) : (
-                      <></>
+                      <>
+                        <button
+                          onClick={() => {
+                            follow(users._id);
+                          }}
+                          style={{display: 'none'}}
+                          id={'follow' + users._id}
+                          type="submit">
+                          <PersonAddIcon />
+                          Follow
+                        </button>
+                        <button
+                          onClick={() => {
+                            unFollow(users._id);
+                          }}
+                          style={{display: 'none'}}
+                          id={'unfollow' + users._id}
+                          type="submit">
+                          <PersonRemoveIcon />
+                          UnFollow
+                        </button>
+                      </>
                     )}
-                    <button
-                      onClick={() => {
-                        follow(users._id);
-                      }}
-                      style={{ display: 'none' }}
-                      id={'follow' + users._id}
-                      type="submit">
-                      <PersonAddIcon />
-                      Follow
-                    </button>
-                    <button
-                      onClick={() => {
-                        unFollow(users._id);
-                      }}
-                      style={{ display: 'none' }}
-                      id={'unfollow' + users._id}
-                      type="submit">
-                      <PersonRemoveIcon />
-                      UnFollow
-                    </button>
                   </>
                 )}
               </div>

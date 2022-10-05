@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import FooterSection from '../FooterSection';
 import Header from '../Header';
 import MobileMenu from '../MobileMenu';
 import Sidebar from '../Sidebar';
@@ -31,6 +32,7 @@ const Groups = () => {
           />
         </section>
       </section>
+      <FooterSection />
     </>
   );
 };

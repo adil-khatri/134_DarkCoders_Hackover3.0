@@ -1,14 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
-import { css } from '@emotion/react';
-import { SyncLoader } from 'react-spinners';
-import { Delete } from '@mui/icons-material';
-import { useParams } from 'react-router-dom';
+import {css} from '@emotion/react';
+import {SyncLoader} from 'react-spinners';
+import {Delete} from '@mui/icons-material';
+import {useParams} from 'react-router-dom';
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import Header from '../Header';
 import Sidebar from '../Sidebar';
-import { toast } from 'react-toastify';
+import {toast} from 'react-toastify';
+import FooterSection from '../FooterSection';
+import MobileMenu from '../MobileMenu';
 
 const Saved_post = () => {
   const override = css`
@@ -31,27 +33,32 @@ const Saved_post = () => {
   const uname = useParams();
 
   const getPosts = async () => {
-    await axios.get('' + uname.username).then((res) => {
-      setsavePosts(res.data.doc);
-      setLoading(false);
-    });
+    await axios
+      .get('https://jinx-social.herokuapp.com/saved-post/' + uname.username)
+      .then((res) => {
+        setsavePosts(res.data.doc);
+        setLoading(false);
+      });
   };
   useEffect(() => {
+    document.title = 'Saved Posts';
     getPosts();
   }, []);
   const deletePost = async (postid) => {
-    await axios.delete(`/delete-savedpost/${postid}`).then((res) => {
-      toast.success('saved Post Deleted Successfully', {
-        toastId: 1234 + 111,
-        position: 'top-center',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
+    await axios
+      .delete(`https://jinx-social.herokuapp.com/delete-savedpost/${postid}`)
+      .then((res) => {
+        toast.success('saved Post Deleted Successfully', {
+          toastId: 1234 + 111,
+          position: 'top-center',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+        });
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
       });
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
-    });
   };
   return (
     <>
@@ -63,7 +70,7 @@ const Saved_post = () => {
             wallet={user.wallet}
             profile_url={user.profile_url}
           />
-
+          <MobileMenu />
           {loading === true ? (
             <>
               <div className="spinner">
@@ -144,6 +151,7 @@ const Saved_post = () => {
           )}
         </section>
       </section>
+      <FooterSection />
     </>
   );
 };

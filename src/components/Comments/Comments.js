@@ -1,18 +1,19 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable eqeqeq */
-import { Avatar, Divider } from '@mui/material';
+import {Avatar, Divider} from '@mui/material';
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
+import {useParams} from 'react-router-dom';
 import './Comments.scss';
 import moment from 'moment';
-import { Delete } from '@mui/icons-material';
+import {Delete} from '@mui/icons-material';
 // import { format } from 'timeago.js';
 
 const Comments = () => {
   const postid = useParams();
   const [user, setUser] = useState({});
   useEffect(() => {
+    getComments();
     if (sessionStorage.getItem('user') !== null) {
       setUser(JSON.parse(sessionStorage.getItem('user')));
     } else {
@@ -23,27 +24,28 @@ const Comments = () => {
 
   const getComments = async () => {
     await axios
-      .get('http://localhost:5001/get-comments/' + postid.postid)
+      .get('https://jinx-social.herokuapp.com/get-comments/' + postid.postid)
       .then((res) => {
         setComments(res.data);
         console.log(comments);
       });
   };
-  const deletePost = async (postid) => {
+  const deletePost = async (postid, commentid) => {
     await axios
-      .delete('http://localhost:5001/delete-comment/' + postid)
+      .delete(
+        'https://jinx-social.herokuapp.com/delete-comment/' +
+          postid +
+          '/' +
+          commentid
+      )
       .then((res) => {
         window.location.reload();
       });
     // window.location.reload();
   };
-  useEffect(() => {
-    getComments();
-  }, []);
 
   return (
     <>
-      {console.log(user)}
       <div className="container">
         <div className="comments">
           <section className="comments-display">
@@ -57,7 +59,7 @@ const Comments = () => {
                   <ul>
                     {comments.map((comment) => (
                       <>
-                        <li>
+                        <li id={comment._id}>
                           <div className="user-col">
                             {comment.user_details.map((user, index) => (
                               <>
@@ -66,7 +68,7 @@ const Comments = () => {
                                     <Avatar
                                       alt="Profile Image"
                                       src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
-                                      sx={{ width: 26, height: 26 }}
+                                      sx={{width: 26, height: 26}}
                                     />
                                   </>
                                 ) : (
@@ -74,7 +76,7 @@ const Comments = () => {
                                     <Avatar
                                       alt="Profile Image"
                                       src={user.profile_url}
-                                      sx={{ width: 26, height: 26 }}
+                                      sx={{width: 26, height: 26}}
                                     />
                                   </>
                                 )}
@@ -96,7 +98,7 @@ const Comments = () => {
                               <button
                                 type="submit"
                                 style={{
-                                  backgroundColor: '#f00',
+                                  backgroundColor: 'transparent',
                                   width: '50px',
                                   display: 'flex',
                                   border: 'none',
@@ -105,7 +107,7 @@ const Comments = () => {
                                   borderRadius: '5px',
                                 }}
                                 onClick={() => {
-                                  deletePost(comment.postId);
+                                  deletePost(comment.postId, comment._id);
                                 }}>
                                 <Delete />
                               </button>
@@ -114,7 +116,9 @@ const Comments = () => {
                             )}
                           </div>
                         </li>
-                        <Divider style={{ backgroundColor: '#fff' }} />
+                        <Divider
+                          style={{backgroundColor: 'rgba(255,255,255,0.15)'}}
+                        />
                       </>
                     ))}
                   </ul>

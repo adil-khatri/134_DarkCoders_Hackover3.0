@@ -3,11 +3,12 @@ import axios from 'axios';
 import React, {useState} from 'react';
 import {toast, ToastContainer} from 'react-toastify';
 import './sass/main.scss';
-import {Link, useNavigate} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import {TextField} from '@mui/material';
 import {db} from '../firebase';
 
 const Register = () => {
+  document.title = 'Register';
   const navigate = useNavigate();
   let axiosConfig = {
     headers: {
@@ -62,7 +63,7 @@ const Register = () => {
       db.collection('users').add(data);
       console.log(data);
       axios
-        .post('http://localhost:5001/register', user, axiosConfig)
+        .post('https://jinx-social.herokuapp.com/register', user, axiosConfig)
         .then((res) => {
           if (res.status === 201) {
             toast.success('Wallet Registration Done Successfully', {
@@ -137,6 +138,12 @@ const Register = () => {
       <section className="login">
         <div className="form">
           <center>
+            <img
+              src="https://res.cloudinary.com/ronaklala-games/image/upload/v1657619895/posts/favicon_dfjgrb.png"
+              alt="logo img"
+              height={'150px'}
+              style={{borderRadius: '50%'}}
+            />
             <h1>Register Into {process.env.REACT_APP_NAME}</h1>
           </center>
           <label>Wallet Address</label>
@@ -144,6 +151,9 @@ const Register = () => {
           <TextField
             variant="outlined"
             label="Email"
+            InputLabelProps={{
+              style: {color: 'white'},
+            }}
             name="email"
             fullWidth
             defaultValue={user.email}
@@ -153,6 +163,9 @@ const Register = () => {
             variant="outlined"
             label="User / Display Name"
             name="username"
+            InputLabelProps={{
+              style: {color: 'white'},
+            }}
             fullWidth
             defaultValue={user.username}
             onChange={handleChange}
@@ -161,7 +174,7 @@ const Register = () => {
             Register
           </button>
           <span>
-            Already Registered? <Link to="/login">Login Now</Link>
+            Already Registered? <a href="/login">Login Now</a>
           </span>
         </div>
       </section>

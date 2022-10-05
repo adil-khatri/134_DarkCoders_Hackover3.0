@@ -2,16 +2,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable eqeqeq */
 /* eslint-disable no-unused-vars */
-import { css } from '@emotion/react';
-import { useParams } from 'react-router-dom';
+import {css} from '@emotion/react';
+import {useParams} from 'react-router-dom';
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { SyncLoader } from 'react-spinners';
+import React, {useEffect, useState} from 'react';
+import {SyncLoader} from 'react-spinners';
 import Header from '../Header';
 import Sidebar from '../Sidebar';
 import MobileMenu from '../MobileMenu';
+import FooterSection from '../FooterSection';
 const UserSearch = () => {
-  var count;
   const search = useParams();
   const override = css`
     display: block;
@@ -23,9 +23,8 @@ const UserSearch = () => {
   var [serach1, onsearch1] = useState({});
   // var data2= {};
   const getuser = async () => {
-    console.log(search.search);
     await axios
-      .get('http://localhost:5001/search')
+      .get('https://jinx-social.herokuapp.com/search')
       .then((res) => {
         setuser(res.data);
         onsearch1(
@@ -36,7 +35,6 @@ const UserSearch = () => {
               .includes(search.search.toString().toLowerCase())
           )
         );
-        console.log(serach1);
       })
       .catch((err) => {
         console.log(err);
@@ -44,23 +42,15 @@ const UserSearch = () => {
   };
   const [posts, setPosts] = useState({});
   const getpost = async () => {
-    await axios.get('http://localhost:5001/posts').then((res) => {
+    await axios.get('https://jinx-social.herokuapp.com/posts').then((res) => {
       setPosts(res.data);
       setLoading(false);
     });
   };
 
-  function post_count(username1, count) {
-    posts.map((username) => {
-      if (username.username === username1) {
-        count = count + 1;
-      }
-    });
-    return count;
-  }
-
   const [user1, setUser] = useState({});
   useEffect(() => {
+    document.title = 'Search - ' + search.search;
     getpost();
     if (sessionStorage.getItem('user') !== null) {
       setUser(JSON.parse(sessionStorage.getItem('user')));
@@ -96,7 +86,16 @@ const UserSearch = () => {
             <>
               {Object.keys(serach1).length == 0 ? (
                 <>
-                  <h1 style={{ color: '#fff' }}>No User Found</h1>
+                  <center style={{width: '100%', marginTop: '20px'}}>
+                    <img
+                      src="https://res.cloudinary.com/ronaklala-games/image/upload/v1657799759/posts/Untitled_design_1_lfhe7e.gif"
+                      height={250}
+                      alt="User Img"
+                    />
+                    <h1 style={{color: '#fff', fontSize: '36px'}}>
+                      No User Found
+                    </h1>
+                  </center>
                 </>
               ) : (
                 <>
@@ -128,12 +127,9 @@ const UserSearch = () => {
                         <div className="profile-info">
                           <span>{data.username}</span>
                           <span>{data.wallet}</span>
-                          <span>User ID :- {data._id}</span>
-                          <span>Total Followers :- </span>
-                          <span>
-                            Number of Posts :-&nbsp;
-                            {post_count(data.username, (count = 0))}
-                          </span>
+                          <a href={'/' + data.wallet}>
+                            <button>View Profile</button>
+                          </a>
                         </div>
                       </section>
                     ))}
@@ -144,6 +140,7 @@ const UserSearch = () => {
           )}
         </section>
       </section>
+      <FooterSection />
     </>
   );
 };

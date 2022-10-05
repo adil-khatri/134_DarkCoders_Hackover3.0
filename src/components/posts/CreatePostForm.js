@@ -43,7 +43,7 @@ const CreatePostForm = (props) => {
     $('#image-text').hide();
     setLoading(true);
     const dataFile = await fetch(
-      'https://api.cloudinary.com/v1_1/ronaklala-games/image/upload',
+      'https://api.cloudinary.com/v1_1/ronaklala-games/video/upload',
       {
         method: 'POST',
         body: data,
@@ -86,7 +86,12 @@ const CreatePostForm = (props) => {
     } else {
       post.username = props.username;
       post.wallet = props.wallet;
-      axios.post('http://localhost:5001/create-post', post, axiosConfig)
+      axios
+        .post(
+          'https://jinx-social.herokuapp.com/create-post',
+          post,
+          axiosConfig
+        )
         .then((res) => {
           console.log(res.status);
           if (res.status === 201) {
@@ -135,6 +140,9 @@ const CreatePostForm = (props) => {
               id="outlined-basic"
               label="Tag-Line"
               variant="outlined"
+              InputLabelProps={{
+                style: {color: 'white'},
+              }}
               onChange={handleInput}
               defaultValue={post.tag}
               name="tag"
@@ -143,6 +151,9 @@ const CreatePostForm = (props) => {
               variant="outlined"
               label="Caption"
               fullWidth
+              InputLabelProps={{
+                style: {color: 'white'},
+              }}
               onChange={handleInput}
               defaultValue={post.caption}
               name="caption"
@@ -154,7 +165,7 @@ const CreatePostForm = (props) => {
                 name="btn-upload"
                 style={{display: 'none'}}
                 type="file"
-                accept="image/*"
+                accept="file/*"
                 onChange={handleChange}
               />
               <Button
